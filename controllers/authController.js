@@ -1,22 +1,26 @@
+const bcrypt = require('bcrypt')
 const User = require('./../models/User')
 
 exports.signupGetController = (req, res, next) => {
-    res.render('pages/auth/signup', {title: 'Create a new account'})
+    res.render('pages/auth/signup', { title: 'Create a new account' })
 }
 
 exports.signupPostController = async (req, res, next) => {
-    let {username, email, password} = req.body
+    let { username, email, password } = req.body
 
-    let user = new User({
-        username,
-        email,
-        password
-    })
 
     try {
+        let hashedPassword = await bcrypt.hash(password, 11)
+
+        let user = new User({
+            username,
+            email,
+            password: hashedPassword
+        })
+        
         let createdUser = await user.save()
         console.log('User created successfully', createdUser)
-        res.render('pages/auth/signup', {title: 'Create a new account'})
+        res.render('pages/auth/signup', { title: 'Create a new account' })
     } catch (e) {
         console.log(e)
         next(e)

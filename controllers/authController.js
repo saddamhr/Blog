@@ -10,13 +10,19 @@ exports.signupGetController = (req, res, next) => {
 
 exports.signupPostController = async (req, res, next) => {
     
-    let errors = validationResult(req).formatWith(errorFormatter)
-
-    if(!errors.isEmpty()){
-        return res.render('pages/auth/signup', { title: 'Create a new account', error: errors.mapped()})
-    }
-
     let { username, email, password } = req.body
+
+    let errors = validationResult(req).formatWith(errorFormatter)
+    if(!errors.isEmpty()){
+        return res.render('pages/auth/signup',
+         {
+              title: 'Create a new account',
+               error: errors.mapped(),
+               value: {
+                   username, email, password
+               }
+            })
+    }
 
 
     try {
@@ -38,11 +44,20 @@ exports.signupPostController = async (req, res, next) => {
 }
 
 exports.loginGetController = (req, res, next) => {
-    res.render('pages/auth/login', { title: 'Login to your account' })
+    res.render('pages/auth/login', { title: 'Login to your account', error: {}})
 }
 
 exports.loginPostController = async (req, res, next) => {
     let { email, password } = req.body
+
+    let errors = validationResult(req).formatWith(errorFormatter)
+    if(!errors.isEmpty()){
+        return res.render('pages/auth/login',
+         {
+              title: 'Login to your account',
+               error: errors.mapped()
+            })
+    }
 
     try {
         let user = await User.findOne({ email })

@@ -6,7 +6,6 @@ const mongoose = require('mongoose')
 const authRoutes = require('./routes/authRoute')
 
 // PLAYGROUND ROUTES
-const validatorRoutes = require('./playground/validator')
 
 const app = express()
 
@@ -25,7 +24,6 @@ const middleware = [
 app.use(middleware)
 
 app.use('/auth', authRoutes)
-app.use('/playground', validatorRoutes)
 
 app.get('/', (req, res) => {
     res.json({

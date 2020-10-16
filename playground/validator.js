@@ -12,10 +12,12 @@ router.post('/validator',
             .isEmpty()
             .withMessage('Username can not be empty')
             .isLength({ max: 15 })
-            .withMessage('Username cant not be grater than 15 character'),
+            .withMessage('Username cant not be grater than 15 character')
+            .trim(),
         check('email')
             .isEmail()
-            .withMessage('Please provide a valid email'),
+            .withMessage('Please provide a valid email')
+            .normalizeEmail(),
             check('password').custom(value => {
                 if(value.length < 5) {
                     throw new Error('Password must be greater than 5 character')
@@ -38,6 +40,7 @@ router.post('/validator',
         console.log(errors.mapped())
         
         console.log(errors.formatWith(formatter).mapped())
+        console.log(req.body.username, req.body.email)
         res.render('playground/signup', { title: 'Validator Playground' })
     })
 
